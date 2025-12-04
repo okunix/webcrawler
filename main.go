@@ -4,15 +4,17 @@ import (
 	"context"
 	"log/slog"
 	"os"
+
+	"github.com/okunix/webcrawler/config"
 )
 
 func main() {
 	ctx := context.TODO()
 
 	// initializing fetcher
-	fetcher := NewDefaultFetcher(UserAgent, Timeout)
+	fetcher := NewDefaultFetcher(config.UserAgent, config.Timeout)
 
-	fetched := make(map[string]bool)
+	seen := make(map[string]bool)
 	linksCh := make(chan []string)
 	unseenLinkCh := make(chan string)
 
@@ -42,10 +44,10 @@ func main() {
 	// if not add it to unseenLink channel and mark as seen
 	for links := range linksCh {
 		for _, link := range links {
-			if fetched[link] {
+			if seen[link] {
 				continue
 			}
-			fetched[link] = true
+			seen[link] = true
 			unseenLinkCh <- link
 		}
 	}
