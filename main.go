@@ -4,23 +4,18 @@ import (
 	"context"
 	"log/slog"
 	"os"
-	"strconv"
-	"time"
 )
 
 func main() {
-	// initializing fetcher
-	timeoutSec, err := strconv.Atoi(Timeout)
-	if err != nil {
-		panic(err)
-	}
-	timeout := time.Duration(timeoutSec) * time.Second
 	ctx := context.TODO()
-	fetcher := NewDefaultFetcher(UserAgent, timeout)
+
+	// initializing fetcher
+	fetcher := NewDefaultFetcher(UserAgent, Timeout)
 
 	fetched := make(map[string]bool)
 	linksCh := make(chan []string)
 	unseenLinkCh := make(chan string)
+
 	// loading urls from os.Args
 	go func() { linksCh <- os.Args[1:] }()
 
