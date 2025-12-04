@@ -1,10 +1,12 @@
-package main
+package fetcher
 
 import (
 	"context"
 	"io"
 	"net/http"
 	"time"
+
+	"github.com/okunix/webcrawler/link"
 )
 
 var (
@@ -41,7 +43,7 @@ func (f *DefaultFetcher) Fetch(ctx context.Context, url string) ([]string, int, 
 	if err != nil {
 		return nil, resp.StatusCode, err
 	}
-	baseURL, _ := BaseURL(url)
-	links := ExtractLinks(string(body), baseURL)
+	baseURL, _ := link.BaseURL(url)
+	links := link.ExtractLinks(string(body), baseURL)
 	return links, resp.StatusCode, nil
 }

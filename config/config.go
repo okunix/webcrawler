@@ -23,4 +23,9 @@ var (
 		}
 		return time.Duration(timeoutSec) * time.Second
 	}()
+	PgHost     = GetenvWithDefault("PG_HOST", "localhost:5432")
+	PgUser     = GetenvWithDefault("PG_USER", "postgres")
+	PgPassword = GetenvWithDefault("PG_PASSWORD", "postgres")
+	PgDb       = GetenvWithDefault("PG_DB", "webcrawler_db")
+	PgSSL      = GetenvWithDefault("PG_SSLMODE", "disable")
 )

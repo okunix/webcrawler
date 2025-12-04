@@ -6,13 +6,14 @@ import (
 	"os"
 
 	"github.com/okunix/webcrawler/config"
+	"github.com/okunix/webcrawler/fetcher"
 )
 
 func main() {
 	ctx := context.TODO()
 
 	// initializing fetcher
-	fetcher := NewDefaultFetcher(config.UserAgent, config.Timeout)
+	fetcher := fetcher.NewDefaultFetcher(config.UserAgent, config.Timeout)
 
 	seen := make(map[string]bool)
 	linksCh := make(chan []string)

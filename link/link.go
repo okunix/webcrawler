@@ -1,4 +1,4 @@
-package main
+package link
 
 import (
 	"errors"
@@ -12,14 +12,14 @@ var (
 	httpRegex         = regexp.MustCompile(`^https?://\S+`)
 )
 
-func ExtractLinks(s, baseURL string) []string {
-	links := ExtractRawLinks(s)
+func ExtractLinks(body, baseURL string) []string {
+	links := ExtractRawLinks(body)
 	return Normalize(baseURL, links)
 }
 
-func ExtractRawLinks(s string) []string {
+func ExtractRawLinks(body string) []string {
 	links := []string{}
-	hrefs := hrefRegex.FindAllStringSubmatch(s, -1)
+	hrefs := hrefRegex.FindAllStringSubmatch(body, -1)
 	if hrefs == nil {
 		return links
 	}
