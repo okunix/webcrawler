@@ -4,13 +4,24 @@ import (
 	"context"
 	"log/slog"
 	"os"
+	"slices"
 
 	"github.com/okunix/webcrawler/config"
 	"github.com/okunix/webcrawler/fetcher"
+	linkPkg "github.com/okunix/webcrawler/link"
 )
 
 func main() {
 	ctx := context.TODO()
+
+	domains := []string{}
+	for _, v := range os.Args[1:] {
+		domain, err := linkPkg.BaseURL(v)
+		if err != nil {
+			panic(err)
+		}
+		domains = append(domains, domain)
+	}
 
 	// initializing fetcher
 	fetcher := fetcher.NewDefaultFetcher(config.UserAgent, config.Timeout)
@@ -43,13 +54,23 @@ func main() {
 
 	// checking if we have seen link
 	// if not add it to unseenLink channel and mark as seen
+	var n int
 	for links := range linksCh {
 		for _, link := range links {
-			if seen[link] {
+			domain, err := linkPkg.BaseURL(link)
+			if err != nil {
+				continue
+			}
+			if seen[link] || !slices.Contains(domains, domain) {
 				continue
 			}
 			seen[link] = true
+			n++
 			unseenLinkCh <- link
+		}
+		n--
+		if n < 0 {
+			break
 		}
 	}
 }
