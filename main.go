@@ -33,8 +33,8 @@ func main() {
 	// loading urls from os.Args
 	go func() { linksCh <- os.Args[1:] }()
 
-	// starting 20 workers
-	for range 20 {
+	// starting workers
+	for range config.Crawlers {
 		go func() {
 			for link := range unseenLinkCh {
 				fetchedLinks, code, err := fetcher.Fetch(ctx, link)

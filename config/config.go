@@ -15,7 +15,8 @@ func GetenvWithDefault(key, defaultValue string) string {
 
 var (
 	UserAgent = GetenvWithDefault("USER_AGENT", "curl/8.17.0")
-	Timeout   = func() time.Duration {
+
+	Timeout = func() time.Duration {
 		timeoutEnv := GetenvWithDefault("TIMEOUT", "10")
 		timeoutSec, err := strconv.Atoi(timeoutEnv)
 		if err != nil {
@@ -23,6 +24,16 @@ var (
 		}
 		return time.Duration(timeoutSec) * time.Second
 	}()
+
+	Crawlers = func() uint32 {
+		crawlersEnv := GetenvWithDefault("CRAWLERS", "20")
+		crawlers, err := strconv.ParseUint(crawlersEnv, 10, 32)
+		if err != nil {
+			panic(err)
+		}
+		return uint32(crawlers)
+	}()
+
 	PgHost     = GetenvWithDefault("PG_HOST", "localhost:5432")
 	PgUser     = GetenvWithDefault("PG_USER", "postgres")
 	PgPassword = GetenvWithDefault("PG_PASSWORD", "postgres")
