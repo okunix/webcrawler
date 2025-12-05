@@ -14,12 +14,12 @@ var (
 	htmlIdRefRegex    = regexp.MustCompile(`#[A-Za-z][A-Za-z0-9\-_:.]*$`)
 )
 
-func ExtractLinks(body, baseURL string) []string {
-	links := ExtractRawLinks(body)
+func Extract(body, baseURL string) []string {
+	links := ExtractHrefs(body)
 	return Normalize(baseURL, links)
 }
 
-func ExtractRawLinks(body string) []string {
+func ExtractHrefs(body string) []string {
 	links := []string{}
 	hrefs := hrefRegex.FindAllStringSubmatch(body, -1)
 	if hrefs == nil {
@@ -39,8 +39,9 @@ func Normalize(baseURL string, links []string) []string {
 			link = v
 		} else if relativePathRegex.MatchString(v) {
 			link = baseURL + v
+		} else {
+			continue
 		}
-
 		cleanLink := htmlIdRefRegex.ReplaceAllString(link, "")
 		normalized = append(normalized, cleanLink)
 	}

@@ -44,6 +44,6 @@ func (f *DefaultFetcher) Fetch(ctx context.Context, url string) ([]string, int, 
 		return nil, resp.StatusCode, err
 	}
 	baseURL, _ := link.BaseURL(url)
-	links := link.ExtractLinks(string(body), baseURL)
+	links := link.Extract(string(body), baseURL)
 	return links, resp.StatusCode, nil
 }

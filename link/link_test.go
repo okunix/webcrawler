@@ -27,7 +27,7 @@ func TestExtractRawLinks(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := ExtractRawLinks(tt.input)
+			got := ExtractHrefs(tt.input)
 			t.Logf("%+v\n", got)
 			if len(got) != len(tt.expected) {
 				t.Errorf("expected %d links, got %d", len(tt.expected), len(got))
@@ -72,7 +72,7 @@ func TestNormalize(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got := Normalize(tt.baseURL, tt.links)
-			t.Logf("%+v\n", got)
+			t.Logf("%+v %d\n", got)
 			if len(got) != len(tt.expected) {
 				t.Errorf("expected %d links, got %d", len(tt.expected), len(got))
 				return
@@ -138,7 +138,7 @@ func TestExtractLinks(t *testing.T) {
 		"https://mysite.com/internal",
 	}
 
-	got := ExtractLinks(html, base)
+	got := Extract(html, base)
 
 	if len(got) != len(expected) {
 		t.Errorf("expected %d links, got %d", len(expected), len(got))
