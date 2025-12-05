@@ -1,0 +1,20 @@
+services:
+  crawler:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: crawler
+    depends_on:
+      kafka:
+        condition: service_healthy
+  rabbitmq:
+    image: rabbitmq:latest
+    container_name: crawler-kafka
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
+volumes:
+  rabbitmq_data: {}
