@@ -8,8 +8,10 @@ import (
 var (
 	hrefRegex         = regexp.MustCompile(`<a\s+href=["'](https?://[^"'\s]+|(?:/[^"'\s]+)+)["']>`)
 	baseURLRegex      = regexp.MustCompile(`^(https?://[^/\\<>#\s]+)`)
+	domainRegex       = regexp.MustCompile(`^https?://([^/\\<>#\s]+)`)
 	relativePathRegex = regexp.MustCompile(`^(?:/[^/\\\s]+)+/?(?:\?.+)?$`)
 	httpRegex         = regexp.MustCompile(`^https?://\S+`)
+	htmlIdRefRegex    = regexp.MustCompile(`#[A-Za-z][A-Za-z0-9\-_:.]*$`)
 )
 
 func ExtractLinks(body, baseURL string) []string {
@@ -32,11 +34,15 @@ func ExtractRawLinks(body string) []string {
 func Normalize(baseURL string, links []string) []string {
 	normalized := []string{}
 	for _, v := range links {
+		var link string
 		if httpRegex.MatchString(v) {
-			normalized = append(normalized, v)
+			link = v
 		} else if relativePathRegex.MatchString(v) {
-			normalized = append(normalized, baseURL+v)
+			link = baseURL + v
 		}
+
+		cleanLink := htmlIdRefRegex.ReplaceAllString(link, "")
+		normalized = append(normalized, cleanLink)
 	}
 	return normalized
 }
@@ -45,6 +51,14 @@ func BaseURL(link string) (string, error) {
 	matches := baseURLRegex.FindStringSubmatch(link)
 	if len(matches) < 2 {
 		return "", errors.New("base of the url not detected")
+	}
+	return matches[1], nil
+}
+
+func Domain(link string) (string, error) {
+	matches := domainRegex.FindStringSubmatch(link)
+	if len(matches) < 2 {
+		return "", errors.New("domain not detected")
 	}
 	return matches[1], nil
 }
