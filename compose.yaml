@@ -5,16 +5,21 @@ services:
       dockerfile: Dockerfile
     container_name: crawler
     depends_on:
-      kafka:
+      rabbitmq:
         condition: service_healthy
   rabbitmq:
     image: rabbitmq:latest
-    container_name: crawler-kafka
+    container_name: crawler-rabbitmq
     ports:
       - 5672:5672
       - 15672:15672
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 30s
+      retries: 3
 
 volumes:
   rabbitmq_data: {}

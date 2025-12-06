@@ -72,7 +72,7 @@ func TestNormalize(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got := Normalize(tt.baseURL, tt.links)
-			t.Logf("%+v %d\n", got)
+			t.Logf("%+v\n", got)
 			if len(got) != len(tt.expected) {
 				t.Errorf("expected %d links, got %d", len(tt.expected), len(got))
 				return
