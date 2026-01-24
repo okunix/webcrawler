@@ -6,7 +6,9 @@ import (
 )
 
 var (
-	hrefRegex         = regexp.MustCompile(`<a\s+href=["'](https?://[^"'\s]+|(?:/[^"'\s]+)+)["']>`)
+	hrefRegex = regexp.MustCompile(
+		`<a\s+href=["']?(https?://[^"'>\s]+|(?:/[^"'>\s]+)+)["']?>`,
+	)
 	baseURLRegex      = regexp.MustCompile(`^(https?://[^/\\<>#\s]+)`)
 	domainRegex       = regexp.MustCompile(`^https?://([^/\\<>#\s]+)`)
 	relativePathRegex = regexp.MustCompile(`^(?:/[^/\\\s]+)+/?(?:\?.+)?$`)
